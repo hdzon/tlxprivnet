@@ -1,0 +1,62 @@
+version: '3.7'
+
+services:
+
+  geth-bootnode:
+    hostname: geth-bootnode
+    container_name: tlx-boot
+    env_file:
+      - .env
+    ports:
+      - "30303:30303"
+    image: ethereum/client-go:stable
+    volumes:
+      - ./data/bootnode:/root/.ethereum
+      - ./genesis.json:/root/genesis.json
+      - ./geth-init.sh:/root/geth-init.sh
+    entrypoint: /root/geth-init.sh
+    command:
+      --nodekeyhex="${BOOT_NODEHEX}"
+      --nodiscover
+      --ipcdisable
+      --networkid=${NETWORK_ID}
+    networks:
+      priv-eth-net:
+
+  geth-miner:
+    hostname: geth-miner
+    container_name: tlx-miner
+    env_file:
+      - .env
+    ports:
+      - "8544:8545"
+    image: ethereum/client-go:stable
+    volumes:
+      - ./data/miner:/root/.ethereum
+      - ./genesis.json:/root/genesis.json
+      - ./geth-miner.sh:/root/geth-init.sh
+    entrypoint: /root/geth-init.sh
+    depends_on:
+      - geth-bootnode
+    command:
+      --bootnodes="enode://${BOOT_ENODE}@geth-bootnode:30303"
+      --allow-insecure-unlock
+      --syncmode=full
+      --mine
+      --miner.threads=1
+      --networkid=${NETWORK_ID}
+      --http
+      --http.addr="0.0.0.0"
+      --http.api="eth,web3,net,admin,personal"
+      --http.corsdomain="*"
+      --http.vhosts="*"
+      --netrestrict="172.16.254.0/28"
+    networks:
+      priv-eth-net:
+
+networks:
+  priv-eth-net:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.16.254.0/28
