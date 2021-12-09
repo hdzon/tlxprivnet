@@ -27,4 +27,11 @@ or
 docker-compose up -d
 ```
 
+References:
+
+https://medium.com/scb-digital/running-a-private-ethereum-blockchain-using-docker-589c8e6a4fe8
+
+https://geth.ethereum.org/docs/interface/command-line-options
+
+https://github.com/ethereum/go-ethereum/blob/master/Dockerfile
 
