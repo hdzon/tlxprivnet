@@ -17,9 +17,9 @@ services:
     entrypoint: /root/geth-init.sh
     command:
       --nodekeyhex="${BOOT_NODEHEX}"
-      --nodiscover
-      --ipcdisable
       --networkid=${NETWORK_ID}
+      --nodiscover
+      --verbosity=6
     networks:
       priv-eth-net:
 
@@ -40,17 +40,19 @@ services:
       - geth-bootnode
     command:
       --bootnodes="enode://${BOOT_ENODE}@geth-bootnode:30303"
-      --allow-insecure-unlock
       --syncmode=full
+      --allow-insecure-unlock
       --mine
-      --miner.threads=1
+      --miner.etherbase "${ACCOUNT_ADDRESS}"
       --networkid=${NETWORK_ID}
+      --unlock "${ACCOUNT_ADDRESS}"
+      --password /root/pass/.accountpassword
       --http
       --http.addr="0.0.0.0"
       --http.api="eth,web3,net,admin,personal"
       --http.corsdomain="*"
       --http.vhosts="*"
-      --netrestrict="172.16.254.0/28"
+      # --netrestrict="172.16.254.0/28"
     networks:
       priv-eth-net:
 

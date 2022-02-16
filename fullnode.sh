@@ -1,11 +1,11 @@
 #!/bin/sh
 
 if [ "$1" = "d" ]; then
-    echo stop fullnode
-    docker-compose  down
+    echo stop chain
+    docker-compose -p tlx-fullnode -f docker-compose-fullnode.yml down
     exit 0
 fi
 
-echo start fullnode
-docker-compose up -d
+echo start chain
+docker-compose -p tlx-fullnode -f docker-compose-fullnode.yml up -d
 

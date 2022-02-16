@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  geth-fullnode:
+    hostname: geth-fullnode
+    container_name: tlx-fullnode
+    env_file:
+      - .env
+    image: ethereum/client-go:stable
+    volumes:
+      - ./data/fullnode:/root/.ethereum
+      - ./genesis.json:/root/genesis.json
+      - ./geth-init.sh:/root/geth-init.sh
+    entrypoint: /root/geth-init.sh
+    command:
+      --bootnodes="enode://${BOOT_ENODE}@${TESTNET_HOST}:30303"
+      --allow-insecure-unlock
+      --syncmode=full
+      --verbosity=6
+      --http
+      --http.addr=0.0.0.0
+      --http.api=eth,web3,net,admin,personal
+      --http.corsdomain=*
+      --http.vhosts=*
+      --networkid=${NETWORK_ID}
+      --ws
+      --ws.addr=0.0.0.0
+      --ws.port=8545
+      --ws.api=eth,web3,net,admin,personal
+    ports:
+      - "8545:8545"
+
