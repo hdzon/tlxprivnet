@@ -20,8 +20,10 @@ services:
       --networkid=${NETWORK_ID}
       --nodiscover
       --verbosity=6
+      --nat extip:172.16.254.10
     networks:
-      priv-eth-net:
+      tlx-chain-net:
+        ipv4_address: 172.16.254.10
 
   geth-miner:
     hostname: geth-miner
@@ -52,12 +54,13 @@ services:
       --http.api="eth,web3,net,admin,personal"
       --http.corsdomain="*"
       --http.vhosts="*"
-      # --netrestrict="172.16.254.0/28"
+      --netrestrict="172.16.254.0/28"
     networks:
-      priv-eth-net:
+      tlx-chain-net:
+        ipv4_address: 172.16.254.11
 
 networks:
-  priv-eth-net:
+  tlx-chain-net:
     driver: bridge
     ipam:
       config:

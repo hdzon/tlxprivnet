@@ -23,10 +23,6 @@ services:
       --http.corsdomain=*
       --http.vhosts=*
       --networkid=${NETWORK_ID}
-      --ws
-      --ws.addr=0.0.0.0
-      --ws.port=8545
-      --ws.api=eth,web3,net,admin,personal
     ports:
       - "8545:8545"
 
